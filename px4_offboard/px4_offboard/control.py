@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
 import sys
+import math
 
 import geometry_msgs.msg
 import rclpy
@@ -105,8 +105,8 @@ def main():
     arm_pub = node.create_publisher(std_msgs.msg.Bool, '/arm_message', qos_profile)
 
 
-    speed = 0.5
-    turn = .2
+    speed = 0.2
+    turn = .087
     x = 0.0
     y = 0.0
     z = 0.0
@@ -149,6 +149,10 @@ def main():
             y_val = (y * speed) + y_val
             z_val = (z * speed) + z_val
             yaw_val = (th * turn) + yaw_val
+            
+            # Wrap yaw_val to be between -pi and pi
+            yaw_val = (yaw_val + math.pi) % (2 * math.pi) - math.pi
+            
             twist.linear.x = x_val
             twist.linear.y = y_val
             twist.linear.z = z_val

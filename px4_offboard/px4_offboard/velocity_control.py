@@ -116,6 +116,7 @@ class OffboardControl(Node):
         self.myCnt = 0
         self.arm_message = False
         self.failsafe = False
+        self.desired_altitude = 1.0  # Set the desired altitude here
 
         # states with corresponding callback functions that run once when state switches
         self.states = {
@@ -270,15 +271,16 @@ class OffboardControl(Node):
             trajectory_msg.timestamp = int(Clock().now().nanoseconds / 1000)
             trajectory_msg.velocity[0] = velocity_world_x
             trajectory_msg.velocity[1] = velocity_world_y
-            trajectory_msg.velocity[2] = self.velocity.z
+            trajectory_msg.velocity[2] = float('nan')
             trajectory_msg.position[0] = float('nan')
             trajectory_msg.position[1] = float('nan')
-            trajectory_msg.position[2] = float('nan')
+            trajectory_msg.position[2] = self.velocity.z
+
             trajectory_msg.acceleration[0] = float('nan')
             trajectory_msg.acceleration[1] = float('nan')
             trajectory_msg.acceleration[2] = float('nan')
-            trajectory_msg.yaw = float('nan')
-            trajectory_msg.yawspeed = self.yaw
+            trajectory_msg.yaw = self.yaw
+            trajectory_msg.yawspeed = float('nan')
 
             self.publisher_trajectory.publish(trajectory_msg)
 
